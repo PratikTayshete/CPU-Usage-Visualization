@@ -34,6 +34,10 @@ class MainClass(QtWidgets.QMainWindow, cpu_usage_design.Ui_MainWindow):
         self.updatethread.connect(self.updatethread, QtCore.SIGNAL("signal(int)"), self.updateGraph)
         self.updatethread.start()
 
+    def closeEvent(self, event):
+        self.updatethread.stop()
+        QtWidgets.QMainWindow.closeEvent(self, event)
+
 
 
     # Method that updates the graph with the cpu usage count.
@@ -60,14 +64,17 @@ class MainClass(QtWidgets.QMainWindow, cpu_usage_design.Ui_MainWindow):
 class UpdateThread(QtCore.QThread):
     def __init__(self, parent=None):
         super(UpdateThread, self).__init__(parent)
+        self.stopThread = False
 
     def run(self):
-        while True:
+        while not self.stopThread:
             cpu_data = cpu_process.get_process_percent()
             self.emit(QtCore.SIGNAL("signal(int)"), cpu_data)
 
     def stop(self):
-        self.stop()
+        self.stopThread = True
+        self.wait()
+        self.quit()
 
 
 
