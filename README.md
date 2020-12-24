@@ -1,2 +1,2 @@
-# CPU-Usage-using-PySide2-and-Matplotlib
+# CPU-Usage-Visualization
 This application plots the usage of CPU using Matplotlib and PySide2
